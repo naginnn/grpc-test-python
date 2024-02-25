@@ -1,0 +1,42 @@
+syntax = "proto3";
+import "google/protobuf/timestamp.proto";
+//import "google/protobuf/wrappers.proto";
+package pb;
+
+option go_package = "github.com/naginnn/GoPythonGrpcTest";
+
+message Metric {
+  google.protobuf.Timestamp time = 1;
+  string name = 2;
+  double value = 3;
+}
+
+message OutliersRequest {
+  repeated Metric metrics = 1;
+}
+
+message OutliersResponse {
+  repeated int32 indices = 1;
+}
+
+enum Reports {
+  ClusterConfig = 0;
+  ClusterConfigMetric = 1;
+}
+
+message ReportType {
+  Reports report = 1;
+//  google.protobuf.StringValue filter = 2;
+  string param = 2;
+  int64 start = 3;
+  int64 end = 4;
+}
+
+message ReportB {
+  bytes report = 1;
+}
+
+service Outliers {
+  rpc Detect(OutliersRequest) returns (OutliersResponse) {}
+  rpc Report(ReportType) returns (ReportB) {}
+}
